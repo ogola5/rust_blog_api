@@ -1,36 +1,41 @@
 import React ,{useState,useEffect}from 'react';
 import "../styles/home.css"
 const Home = () => {
+    //const [id,setId] = useState('')
     const [title,setTitle]= useState('');
     const [content,setContent] = useState('')
     const [posts,setPosts] = useState([]);
 
     
 
-    const handleSubmit = async (e) =>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const newPost = {title,content};
-        const url ='http://localhost:3030/blog';
-        try{
-            const response = await fetch (url,{
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json',
+        const newPost = { 
+            id: Date.now(), // Temporary ID for testing - usually not recommended
+            title, 
+            content 
+        };
+        const url = 'http://localhost:3030/blog';
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(newPost),
             });
-            if (response.ok){
+            if (response.ok) {
                 console.log("Post created successfully");
                 setTitle('');
                 setContent('');
-            }else {
-                console.errors("Failed to create post",response.status,response.statusText);
+            } else {
+                console.error("Failed to create post", response.status, response.statusText);
             }
-        }catch(error){
-            console.error("Failed to connect to the server",error);
-        };
-        
-    }
+        } catch (error) {
+            console.error("Failed to connect to the server", error);
+        }
+    };
+    
     const fetchPosts = async () => {
         const url = 'http://localhost:3030/blog';
         const response = await fetch(url);
@@ -102,7 +107,7 @@ const Home = () => {
       </form>
       <div>
         {posts.map(post =>(
-            <div key={post.title}>
+            <div key={post.id}>
                 <h2>{post.title}</h2>
                 <p>{post.content}</p>
                 <button onClick={() =>handleUpdate(post.id,post)}>Update</button>
